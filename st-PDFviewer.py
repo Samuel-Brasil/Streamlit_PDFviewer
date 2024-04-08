@@ -1,7 +1,5 @@
 from streamlit_pdf_reader import pdf_reader
 
-
-st.button("Reset", type="primary")
 if st.button('Say hello'):
     st.write('Why hello there')
     source3=st.file_uploader("Choose a pdf file:")
