@@ -1,13 +1,10 @@
 from streamlit_pdf_reader import pdf_reader
 
-source1='./test.pdf'
-pdf_reader(source1)
 
-source2="https://www-fourier.ujf-grenoble.fr/~faure/enseignement/relativite/cours.pdf"
-pdf_reader(source2)
-
-source3=st.file_uploader("Choose a pdf file:")
-if source3:
+st.button("Reset", type="primary")
+if st.button('Say hello'):
+    st.write('Why hello there')
+    source3=st.file_uploader("Choose a pdf file:")
     pdf_reader(source3)
-
-st.button("Rerun")
+else:
+    st.write('Goodbye')
