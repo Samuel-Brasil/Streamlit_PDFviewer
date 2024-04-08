@@ -1,18 +1,9 @@
-import os
+import streamlit as st
 import base64
-import streamlit.components.v1 as components
 import requests
 from pathlib import Path
 from io import BytesIO
 
-_RELEASE = True
-
-if not _RELEASE:
-    _component_func = components.declare_component("streamlit_pdf_reader",url="http://localhost:3001")
-else:
-    parent_dir = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(parent_dir, "frontend/build")
-    _component_func = components.declare_component("streamlit_pdf_reader", path=build_dir)
 
 def load_pdf(source):
     """Load a PDF from various sources and return as a Base64 encoded string."""
@@ -38,24 +29,18 @@ def load_pdf(source):
 def pdf_reader(source, key=None):
     """Streamlit component to display a PDF from various sources."""
     
-    # Encode the source to Base64
-    base64_string = load_pdf(source)
+    if source is not None:
+        # Encode the source to Base64
+        base64_string = load_pdf(source)
 
-    # Call the frontend component
-    return _component_func(base64_string=base64_string, key=key)
+        # Display PDF in the app using an iframe inside markdown
+        st.markdown(f'<iframe src="{base64_string}" width="700" height="1000"></iframe>', unsafe_allow_html=True)
+
+# Main app
+st.title('PDF Viewer App')
+
+source = st.file_uploader("Choose a PDF file:", type=['pdf'])
+if source:
+    pdf_reader(source)
 
 
-if not _RELEASE:
-    import streamlit as st
-
-    source1='./test.pdf'
-    pdf_reader(source1)
-
-    source2="https://www-fourier.ujf-grenoble.fr/~faure/enseignement/relativite/cours.pdf"
-    pdf_reader(source2)
-
-    source3=st.file_uploader("Choose a pdf file:")
-    if source3:
-        pdf_reader(source3)
-
-    st.button("Rerun")
